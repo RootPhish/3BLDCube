@@ -6,7 +6,7 @@ class Corner:
         self.faces[side3] = label3
 
     def rotate(self, direction):
-        if direction == 'z':
+        if direction == 'y':
             temp = self.faces['B']
             self.faces['B'] = self.faces['L']
             self.faces['L'] = self.faces['F']
@@ -21,7 +21,7 @@ class Edge:
         self.faces[side2] = label2
 
     def rotate(self, direction):
-        if direction == 'z':
+        if direction == 'y':
             temp = self.faces['B']
             self.faces['B'] = self.faces['L']
             self.faces['L'] = self.faces['F']
