@@ -1,4 +1,5 @@
 from cubies import Corner, Edge
+from re import sub
 
 
 class Cube:
@@ -31,7 +32,7 @@ class Cube:
     def __rotate(self, type, a, b, c, d, direction):
         if type == 'c':
             target = self.corners
-        elif type == 'e':
+        else:
             target = self.edges
         temp = target[a]
         target[a] = target[b]
@@ -44,8 +45,6 @@ class Cube:
         target[d].rotate(direction)
 
     def u(self):
-        c = self.corners
-        e = self.edges
         self.__rotate('e', 0, 3, 2, 1, 'y')
         self.__rotate('c', 0, 3, 2, 1, 'y')
 
@@ -54,24 +53,51 @@ class Cube:
         self.u()
         self.u()
 
-    def print(self):
+    def r(self):
+        self.__rotate('e', 1, 6, 9, 5, 'x')
+        self.__rotate('c', 2, 6, 5, 1, 'x')
+
+    def ri(self):
+        self.r()
+        self.r()
+        self.r()
+
+    def f(self):
+        self.__rotate('e', 2, 7, 10, 6, 'z')
+        self.__rotate('c', 3, 7, 6, 2, 'z')
+
+    def fi(self):
+        self.f()
+        self.f()
+        self.f()
+
+    def print(self, colored=False):
         c = self.corners
         e = self.edges
-        print('      {} {} {}'.format(c[0].faces['U'], e[0].faces['U'], c[1].faces['U']))
-        print('      {}   {}'.format(e[3].faces['U'], e[1].faces['U']))
-        print('      {} {} {}'.format(c[3].faces['U'], e[2].faces['U'], c[2].faces['U']))
-        print('{} {} {} {} {} {} {} {} {} {} {} {}'.format(c[0].faces['L'], e[3].faces['L'], c[3].faces['L'],
-                                                           c[3].faces['F'], e[2].faces['F'], c[2].faces['F'],
-                                                           c[2].faces['R'], e[1].faces['R'], c[1].faces['R'],
-                                                           c[1].faces['B'], e[0].faces['B'], c[0].faces['B']))
-        print('{}   {} {}   {} {}   {} {}   {}'.format(e[4].faces['L'], e[7].faces['L'],
-                                                       e[7].faces['F'], e[6].faces['F'],
-                                                       e[6].faces['R'], e[5].faces['R'],
-                                                       e[5].faces['B'], e[4].faces['B']))
-        print('{} {} {} {} {} {} {} {} {} {} {} {}'.format(c[4].faces['L'], e[11].faces['L'], c[7].faces['L'],
-                                                           c[7].faces['F'], e[10].faces['F'], c[6].faces['F'],
-                                                           c[6].faces['R'], e[9].faces['R'], c[5].faces['R'],
-                                                           c[5].faces['B'], e[8].faces['B'], c[4].faces['B']))
-        print('      {} {} {}'.format(c[7].faces['D'], e[10].faces['D'], c[6].faces['D']))
-        print('      {}   {}'.format(e[11].faces['D'], e[9].faces['D']))
-        print('      {} {} {}'.format(c[4].faces['D'], e[8].faces['D'], c[5].faces['D']))
+        cubestring = ''
+        cubestring += '      {} {} {}\n'.format(c[0].faces['U'], e[0].faces['U'], c[1].faces['U'])
+        cubestring += '      {}   {}\n'.format(e[3].faces['U'], e[1].faces['U'])
+        cubestring += '      {} {} {}\n'.format(c[3].faces['U'], e[2].faces['U'], c[2].faces['U'])
+        cubestring += '{} {} {} {} {} {} {} {} {} {} {} {}\n'.format(c[0].faces['L'], e[3].faces['L'], c[3].faces['L'],
+                                                                     c[3].faces['F'], e[2].faces['F'], c[2].faces['F'],
+                                                                     c[2].faces['R'], e[1].faces['R'], c[1].faces['R'],
+                                                                     c[1].faces['B'], e[0].faces['B'], c[0].faces['B'])
+        cubestring += '{}   {} {}   {} {}   {} {}   {}\n'.format(e[4].faces['L'], e[7].faces['L'],
+                                                                 e[7].faces['F'], e[6].faces['F'],
+                                                                 e[6].faces['R'], e[5].faces['R'],
+                                                                 e[5].faces['B'], e[4].faces['B'])
+        cubestring += '{} {} {} {} {} {} {} {} {} {} {} {}\n'.format(c[4].faces['L'], e[11].faces['L'], c[7].faces['L'],
+                                                                     c[7].faces['F'], e[10].faces['F'], c[6].faces['F'],
+                                                                     c[6].faces['R'], e[9].faces['R'], c[5].faces['R'],
+                                                                     c[5].faces['B'], e[8].faces['B'], c[4].faces['B'])
+        cubestring += '      {} {} {}\n'.format(c[7].faces['D'], e[10].faces['D'], c[6].faces['D'])
+        cubestring += '      {}   {}\n'.format(e[11].faces['D'], e[9].faces['D'])
+        cubestring += '      {} {} {}\n'.format(c[4].faces['D'], e[8].faces['D'], c[5].faces['D'])
+        if colored:
+            cubestring = sub('([A-D])', '\033[97m\u2588', cubestring)
+            cubestring = sub('([E-H])', '\033[33m\u2588', cubestring)
+            cubestring = sub('([I-L])', '\033[92m\u2588', cubestring)
+            cubestring = sub('([M-P])', '\033[91m\u2588', cubestring)
+            cubestring = sub('([Q-T])', '\033[94m\u2588', cubestring)
+            cubestring = sub('([U-X])', '\033[93m\u2588', cubestring)
+        print(cubestring)
