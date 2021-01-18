@@ -46,8 +46,8 @@ class Cube:
     def u(self):
         c = self.corners
         e = self.edges
-        self.__rotate('e', 0, 3, 2, 1, 'z')
-        self.__rotate('c', 0, 3, 2, 1, 'z')
+        self.__rotate('e', 0, 3, 2, 1, 'y')
+        self.__rotate('c', 0, 3, 2, 1, 'y')
 
     def ui(self):
         self.u()
