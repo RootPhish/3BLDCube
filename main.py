@@ -2,6 +2,7 @@ from cube import Cube
 
 if __name__ == '__main__':
     cube = Cube()
-    print(cube.edges)
+    cube.print()
+
     cube.u()
     cube.print()
