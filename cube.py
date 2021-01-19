@@ -6,6 +6,11 @@ class Cube:
 
     def __init__(self):
         self.corners = []
+        self.edges = []
+        self.reset()
+
+    def reset(self):
+        self.corners = []
         self.corners.append(Corner('U', 'A', 'L', 'E', 'B', 'R'))
         self.corners.append(Corner('U', 'B', 'R', 'N', 'B', 'Q'))
         self.corners.append(Corner('U', 'C', 'R', 'M', 'F', 'J'))
@@ -48,28 +53,73 @@ class Cube:
         self.__rotate('e', 0, 3, 2, 1, 'y')
         self.__rotate('c', 0, 3, 2, 1, 'y')
 
-    def ui(self):
-        self.u()
-        self.u()
-        self.u()
-
     def r(self):
         self.__rotate('e', 1, 6, 9, 5, 'x')
         self.__rotate('c', 2, 6, 5, 1, 'x')
-
-    def ri(self):
-        self.r()
-        self.r()
-        self.r()
 
     def f(self):
         self.__rotate('e', 2, 7, 10, 6, 'z')
         self.__rotate('c', 3, 7, 6, 2, 'z')
 
+    def di(self):
+        self.__rotate('e', 8, 11, 10, 9, 'y')
+        self.__rotate('c', 4, 7, 6, 5, 'y')
+
+    def li(self):
+        self.__rotate('e', 3, 7, 11, 4, 'x')
+        self.__rotate('c', 3, 7, 4, 0, 'x')
+
+    def bi(self):
+        self.__rotate('e', 0, 4, 8, 5, 'z')
+        self.__rotate('c', 0, 4, 5, 1, 'z')
+
+    def ui(self):
+        for x in range(3):
+            self.u()
+
+    def ri(self):
+        for x in range(3):
+            self.r()
+
     def fi(self):
-        self.f()
-        self.f()
-        self.f()
+        for x in range(3):
+            self.f()
+
+    def d(self):
+        for x in range(3):
+            self.di()
+
+    def l(self):
+        for x in range(3):
+            self.li()
+
+    def b(self):
+        for x in range(3):
+            self.bi()
+
+    def u2(self):
+        for x in range(2):
+            self.u()
+
+    def r2(self):
+        for x in range(2):
+            self.r()
+
+    def f2(self):
+        for x in range(2):
+            self.f()
+
+    def d2(self):
+        for x in range(2):
+            self.di()
+
+    def l2(self):
+        for x in range(2):
+            self.li()
+
+    def b2(self):
+        for x in range(2):
+            self.bi()
 
     def print(self, colored=False):
         c = self.corners
@@ -101,3 +151,30 @@ class Cube:
             cubestring = sub('([Q-T])', '\033[94m\u2588', cubestring)
             cubestring = sub('([U-X])', '\033[93m\u2588', cubestring)
         print(cubestring)
+        print('\033[37m')
+
+    def perform_algo(self, algo):
+        moves = algo.split(' ')
+        switcher = {
+            'L': self.l,
+            'R': self.r,
+            'F': self.f,
+            'B': self.b,
+            'U': self.u,
+            'D': self.d,
+            'L\'': self.li,
+            'R\'': self.ri,
+            'F\'': self.fi,
+            'B\'': self.bi,
+            'U\'': self.ui,
+            'D\'': self.di,
+            'L2': self.l2,
+            'R2': self.r2,
+            'F2': self.f2,
+            'B2': self.b2,
+            'U2': self.u2,
+            'D2': self.d2
+        }
+        for move in moves:
+            func = switcher.get(move, lambda: "Invalid move")
+            func()
