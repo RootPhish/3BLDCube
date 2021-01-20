@@ -1,7 +1,7 @@
 class Cubie:
 
     def __init__(self):
-        pass
+        self.faces = {}
 
     def rotate(self, direction):
         if direction == 'y':
@@ -34,3 +34,9 @@ class Edge(Cubie):
     def __init__(self, side1, label1, side2, label2):
         super().__init__()
         self.faces = {'U': '', 'D': '', 'F': '', 'B': '', 'L': '', 'R': '', side1: label1, side2: label2}
+
+
+class Center(Cubie):
+    def __init__(self, side1, label1):
+        super().__init__()
+        self.faces = {'U': '', 'D': '', 'F': '', 'B': '', 'L': '', 'R': '', side1: label1}

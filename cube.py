@@ -1,5 +1,16 @@
-from cubies import Corner, Edge
+from cubies import Corner, Edge, Center
+from functools import partial
 from re import sub
+
+
+class Colors:
+    WHITE = '\033[97m'
+    ORANGE = '\033[33m'
+    GREEN = '\033[92m'
+    RED = '\033[91m'
+    BLUE = '\033[94m'
+    YELLOW = '\033[93m'
+    RESET = '\033[0m'
 
 
 class Cube:
@@ -7,6 +18,7 @@ class Cube:
     def __init__(self):
         self.corners = []
         self.edges = []
+        self.centers = []
         self.reset()
 
     def reset(self):
@@ -34,11 +46,23 @@ class Cube:
         self.edges.append(Edge('D', 'U', 'F', 'K'))
         self.edges.append(Edge('D', 'X', 'L', 'G'))
 
-    def __rotate(self, type, a, b, c, d, direction):
-        if type == 'c':
+        self.centers = []
+        self.centers.append(Center('U', 'A'))
+        self.centers.append(Center('L', 'E'))
+        self.centers.append(Center('F', 'I'))
+        self.centers.append(Center('R', 'M'))
+        self.centers.append(Center('B', 'Q'))
+        self.centers.append(Center('D', 'U'))
+
+    def __rotate(self, cubietype, a, b, c, d, direction):
+        if cubietype == 'c':
             target = self.corners
-        else:
+        elif cubietype == 'e':
             target = self.edges
+        elif cubietype == 'ce':
+            target = self.centers
+        else:
+            return
         temp = target[a]
         target[a] = target[b]
         target[b] = target[c]
@@ -49,131 +73,127 @@ class Cube:
         target[c].rotate(direction)
         target[d].rotate(direction)
 
-    def u(self):
-        self.__rotate('e', 0, 3, 2, 1, 'y')
-        self.__rotate('c', 0, 3, 2, 1, 'y')
+    def u(self, count=1):
+        for x in range(count):
+            self.__rotate('e', 0, 3, 2, 1, 'y')
+            self.__rotate('c', 0, 3, 2, 1, 'y')
 
-    def r(self):
-        self.__rotate('e', 1, 6, 9, 5, 'x')
-        self.__rotate('c', 2, 6, 5, 1, 'x')
+    def r(self, count=1):
+        for x in range(count):
+            self.__rotate('e', 1, 6, 9, 5, 'x')
+            self.__rotate('c', 2, 6, 5, 1, 'x')
 
-    def f(self):
-        self.__rotate('e', 2, 7, 10, 6, 'z')
-        self.__rotate('c', 3, 7, 6, 2, 'z')
+    def f(self, count=1):
+        for x in range(count):
+            self.__rotate('e', 2, 7, 10, 6, 'z')
+            self.__rotate('c', 3, 7, 6, 2, 'z')
 
-    def di(self):
-        self.__rotate('e', 8, 11, 10, 9, 'y')
-        self.__rotate('c', 4, 7, 6, 5, 'y')
+    def d(self, count=3):
+        for x in range(count):
+            self.__rotate('e', 8, 11, 10, 9, 'y')
+            self.__rotate('c', 4, 7, 6, 5, 'y')
 
-    def li(self):
-        self.__rotate('e', 3, 7, 11, 4, 'x')
-        self.__rotate('c', 3, 7, 4, 0, 'x')
+    def l(self, count=3):
+        for x in range(count):
+            self.__rotate('e', 3, 7, 11, 4, 'x')
+            self.__rotate('c', 3, 7, 4, 0, 'x')
 
-    def bi(self):
-        self.__rotate('e', 0, 4, 8, 5, 'z')
-        self.__rotate('c', 0, 4, 5, 1, 'z')
+    def b(self, count=3):
+        for x in range(count):
+            self.__rotate('e', 0, 4, 8, 5, 'z')
+            self.__rotate('c', 0, 4, 5, 1, 'z')
 
-    def ui(self):
-        for x in range(3):
-            self.u()
+    def m(self, count=1):
+        for x in range(count):
+            self.__rotate('e', 0, 2, 10, 8, 'x')
+            self.__rotate('ce', 0, 2, 5, 4, 'x')
 
-    def ri(self):
-        for x in range(3):
-            self.r()
+    def e(self, count=3):
+        for x in range(count):
+            self.__rotate('e', 4, 7, 6, 5, 'y')
+            self.__rotate('ce', 1, 2, 3, 4, 'y')
 
-    def fi(self):
-        for x in range(3):
-            self.f()
+    def s(self, count=1):
+        for x in range(count):
+            self.__rotate('e', 3, 11, 9, 1, 'z')
+            self.__rotate('ce', 0, 1, 5, 3, 'z')
 
-    def d(self):
-        for x in range(3):
-            self.di()
-
-    def l(self):
-        for x in range(3):
-            self.li()
-
-    def b(self):
-        for x in range(3):
-            self.bi()
-
-    def u2(self):
-        for x in range(2):
-            self.u()
-
-    def r2(self):
-        for x in range(2):
-            self.r()
-
-    def f2(self):
-        for x in range(2):
-            self.f()
-
-    def d2(self):
-        for x in range(2):
-            self.di()
-
-    def l2(self):
-        for x in range(2):
-            self.li()
-
-    def b2(self):
-        for x in range(2):
-            self.bi()
+    def dw(self, count=3):
+        self.d(count)
+        self.e(count)
 
     def print(self, colored=False):
         c = self.corners
         e = self.edges
+        ce = self.centers
+        block = '\u2588'
         cubestring = ''
         cubestring += '      {} {} {}\n'.format(c[0].faces['U'], e[0].faces['U'], c[1].faces['U'])
-        cubestring += '      {}   {}\n'.format(e[3].faces['U'], e[1].faces['U'])
+        cubestring += '      {} {} {}\n'.format(e[3].faces['U'], ce[0].faces['U'], e[1].faces['U'])
         cubestring += '      {} {} {}\n'.format(c[3].faces['U'], e[2].faces['U'], c[2].faces['U'])
         cubestring += '{} {} {} {} {} {} {} {} {} {} {} {}\n'.format(c[0].faces['L'], e[3].faces['L'], c[3].faces['L'],
                                                                      c[3].faces['F'], e[2].faces['F'], c[2].faces['F'],
                                                                      c[2].faces['R'], e[1].faces['R'], c[1].faces['R'],
                                                                      c[1].faces['B'], e[0].faces['B'], c[0].faces['B'])
-        cubestring += '{}   {} {}   {} {}   {} {}   {}\n'.format(e[4].faces['L'], e[7].faces['L'],
-                                                                 e[7].faces['F'], e[6].faces['F'],
-                                                                 e[6].faces['R'], e[5].faces['R'],
-                                                                 e[5].faces['B'], e[4].faces['B'])
+        cubestring += '{} {} {} {} {} {} {} {} {} {} {} {}\n'.format(e[4].faces['L'],
+                                                                     ce[1].faces['L'],
+                                                                     e[7].faces['L'], e[7].faces['F'],
+                                                                     ce[2].faces['F'],
+                                                                     e[6].faces['F'], e[6].faces['R'],
+                                                                     ce[3].faces['R'], e[5].faces['R'],
+                                                                     e[5].faces['B'],
+                                                                     ce[4].faces['B'],
+                                                                     e[4].faces['B'])
         cubestring += '{} {} {} {} {} {} {} {} {} {} {} {}\n'.format(c[4].faces['L'], e[11].faces['L'], c[7].faces['L'],
                                                                      c[7].faces['F'], e[10].faces['F'], c[6].faces['F'],
                                                                      c[6].faces['R'], e[9].faces['R'], c[5].faces['R'],
                                                                      c[5].faces['B'], e[8].faces['B'], c[4].faces['B'])
         cubestring += '      {} {} {}\n'.format(c[7].faces['D'], e[10].faces['D'], c[6].faces['D'])
-        cubestring += '      {}   {}\n'.format(e[11].faces['D'], e[9].faces['D'])
+        cubestring += '      {} {} {}\n'.format(e[11].faces['D'], ce[5].faces['D'], e[9].faces['D'])
         cubestring += '      {} {} {}\n'.format(c[4].faces['D'], e[8].faces['D'], c[5].faces['D'])
         if colored:
-            cubestring = sub('([A-D])', '\033[97m\u2588', cubestring)
-            cubestring = sub('([E-H])', '\033[33m\u2588', cubestring)
-            cubestring = sub('([I-L])', '\033[92m\u2588', cubestring)
-            cubestring = sub('([M-P])', '\033[91m\u2588', cubestring)
-            cubestring = sub('([Q-T])', '\033[94m\u2588', cubestring)
-            cubestring = sub('([U-X])', '\033[93m\u2588', cubestring)
+            cubestring = sub('([A-D])', Colors.WHITE + block + Colors.RESET, cubestring)
+            cubestring = sub('([E-H])', Colors.ORANGE + block + Colors.RESET, cubestring)
+            cubestring = sub('([I-L])', Colors.GREEN + block + Colors.RESET, cubestring)
+            cubestring = sub('([M-P])', Colors.RED + block + Colors.RESET, cubestring)
+            cubestring = sub('([Q-T])', Colors.BLUE + block + Colors.RESET, cubestring)
+            cubestring = sub('([U-X])', Colors.YELLOW + block + Colors.RESET, cubestring)
+            cubestring += '\033[0m'
         print(cubestring)
-        print('\033[37m')
 
     def perform_algo(self, algo):
         moves = algo.split(' ')
         switcher = {
-            'L': self.l,
-            'R': self.r,
-            'F': self.f,
-            'B': self.b,
-            'U': self.u,
-            'D': self.d,
-            'L\'': self.li,
-            'R\'': self.ri,
-            'F\'': self.fi,
-            'B\'': self.bi,
-            'U\'': self.ui,
-            'D\'': self.di,
-            'L2': self.l2,
-            'R2': self.r2,
-            'F2': self.f2,
-            'B2': self.b2,
-            'U2': self.u2,
-            'D2': self.d2
+            'R': partial(self.r, 1),
+            'F': partial(self.f, 1),
+            'U': partial(self.u, 1),
+            'D': partial(self.d, 3),
+            'L': partial(self.l, 3),
+            'B': partial(self.b, 3),
+            'R\'': partial(self.r, 3),
+            'F\'': partial(self.f, 3),
+            'U\'': partial(self.u, 3),
+            'D\'': partial(self.d, 1),
+            'L\'': partial(self.l, 1),
+            'B\'': partial(self.b, 1),
+            'L2': partial(self.l, 2),
+            'R2': partial(self.r, 2),
+            'F2': partial(self.f, 2),
+            'B2': partial(self.b, 2),
+            'U2': partial(self.u, 2),
+            'D2': partial(self.d, 2),
+            'M': partial(self.m, 3),
+            'M\'': partial(self.m, 1),
+            'M2': partial(self.m, 2),
+            'E': partial(self.e, 3),
+            'E\'': partial(self.e, 1),
+            'E2': partial(self.e, 2),
+            'S': partial(self.s, 1),
+            'S\'': partial(self.s, 3),
+            'S2': partial(self.s, 2),
+            'd': partial(self.dw, 3),
+            'd\'': partial(self.dw, 1),
+            'd2': partial(self.dw, 2)
         }
         for move in moves:
             func = switcher.get(move, lambda: "Invalid move")
