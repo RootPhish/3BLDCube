@@ -205,3 +205,19 @@ class Cube:
         for move in moves:
             func = switcher.get(move, lambda: "Invalid move")
             func()
+
+    def reverse_algo(self, algo):
+        moves = algo.split(' ')
+        moves.reverse()
+        newmoves = []
+        for move in moves:
+            if move[-1] == '2':
+                newmoves.append(move)
+            elif move[-1] == "'":
+                newmoves.append(move[0])
+            else:
+                newmoves.append(move[0] + "'")
+        return " ".join(newmoves)
+
+    def perform_reverse(self, algo):
+        self.perform_algo(self.reverse_algo(algo))
