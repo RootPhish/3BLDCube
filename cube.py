@@ -122,6 +122,10 @@ class Cube:
         self.d(count)
         self.e(count)
 
+    def lw(self, count=3):
+        self.l(count)
+        self.m(count)
+
     def print(self, colored=False):
         c = self.corners
         e = self.edges
@@ -193,7 +197,10 @@ class Cube:
             'S2': partial(self.s, 2),
             'd': partial(self.dw, 3),
             'd\'': partial(self.dw, 1),
-            'd2': partial(self.dw, 2)
+            'd2': partial(self.dw, 2),
+            'l': partial(self.lw, 3),
+            'l\'': partial(self.lw, 1),
+            'l2': partial(self.lw, 2)
         }
         for move in moves:
             func = switcher.get(move, lambda: "Invalid move")
