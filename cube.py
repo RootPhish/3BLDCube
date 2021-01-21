@@ -4,6 +4,9 @@ from re import sub
 
 
 class Colors:
+    def __init__(self):
+        pass
+
     WHITE = '\033[97m'
     ORANGE = '\033[33m'
     GREEN = '\033[92m'
@@ -109,12 +112,12 @@ class Cube:
         self.centers.append(Center('B', 'Q'))
         self.centers.append(Center('D', 'U'))
 
-    def __rotate(self, cubietype, a, b, c, d, direction):
-        if cubietype == 'c':
+    def __rotate(self, cubie_type, a, b, c, d, direction):
+        if cubie_type == 'c':
             target = self.corners
-        elif cubietype == 'e':
+        elif cubie_type == 'e':
             target = self.edges
-        elif cubietype == 'ce':
+        elif cubie_type == 'ce':
             target = self.centers
         else:
             return
@@ -129,47 +132,47 @@ class Cube:
         target[d].rotate(direction)
 
     def u(self, count=1):
-        for x in range(count):
+        for _ in range(count):
             self.__rotate('e', 0, 3, 2, 1, 'y')
             self.__rotate('c', 0, 3, 2, 1, 'y')
 
     def r(self, count=1):
-        for x in range(count):
+        for _ in range(count):
             self.__rotate('e', 1, 6, 9, 5, 'x')
             self.__rotate('c', 2, 6, 5, 1, 'x')
 
     def f(self, count=1):
-        for x in range(count):
+        for _ in range(count):
             self.__rotate('e', 2, 7, 10, 6, 'z')
             self.__rotate('c', 3, 7, 6, 2, 'z')
 
     def d(self, count=3):
-        for x in range(count):
+        for _ in range(count):
             self.__rotate('e', 8, 11, 10, 9, 'y')
             self.__rotate('c', 4, 7, 6, 5, 'y')
 
     def l(self, count=3):
-        for x in range(count):
+        for _ in range(count):
             self.__rotate('e', 3, 7, 11, 4, 'x')
             self.__rotate('c', 3, 7, 4, 0, 'x')
 
     def b(self, count=3):
-        for x in range(count):
+        for _ in range(count):
             self.__rotate('e', 0, 4, 8, 5, 'z')
             self.__rotate('c', 0, 4, 5, 1, 'z')
 
     def m(self, count=1):
-        for x in range(count):
+        for _ in range(count):
             self.__rotate('e', 0, 2, 10, 8, 'x')
             self.__rotate('ce', 0, 2, 5, 4, 'x')
 
     def e(self, count=3):
-        for x in range(count):
+        for _ in range(count):
             self.__rotate('e', 4, 7, 6, 5, 'y')
             self.__rotate('ce', 1, 2, 3, 4, 'y')
 
     def s(self, count=1):
-        for x in range(count):
+        for _ in range(count):
             self.__rotate('e', 3, 11, 9, 1, 'z')
             self.__rotate('ce', 0, 1, 5, 3, 'z')
 
@@ -261,52 +264,53 @@ class Cube:
             func = switcher.get(move, lambda: "Invalid move")
             func()
 
-    def reverse_algo(self, algo):
+    @staticmethod
+    def reverse_algo(algo):
         if algo == '':
             return ''
         moves = algo.split(' ')
         moves.reverse()
-        newmoves = []
+        new_moves = []
         for move in moves:
             if move[-1] == '2':
-                newmoves.append(move)
+                new_moves.append(move)
             elif move[-1] == "'":
-                newmoves.append(move[0])
+                new_moves.append(move[0])
             else:
-                newmoves.append(move[0] + "'")
-        return " ".join(newmoves)
+                new_moves.append(move[0] + "'")
+        return " ".join(new_moves)
 
     def perform_reverse(self, algo):
         self.perform_algo(self.reverse_algo(algo))
 
     def find_first_unsolved_edge(self):
-        solvedcube = Cube()
+        solved_cube = Cube()
         for x in range(0, 24):
             for counter in range(len(self.edges)):
                 if chr(x + 65) in self.edges[counter].faces.values():
-                    if (not self.edges[counter].compare(solvedcube.edges[counter])) and (chr(x + 65) != 'B') and (
+                    if (not self.edges[counter].compare(solved_cube.edges[counter])) and (chr(x + 65) != 'B') and (
                             chr(x + 65) != 'M'):
                         return chr(x + 65)
 
     def find_first_unsolved_corner(self):
-        solvedcube = Cube()
+        solved_cube = Cube()
         for x in range(0, 24):
             for counter in range(len(self.corners)):
                 if chr(x + 65) in self.corners[counter].faces.values():
-                    if (not self.corners[counter].compare(solvedcube.corners[counter])) and (chr(x + 65) != 'A') and (
+                    if (not self.corners[counter].compare(solved_cube.corners[counter])) and (chr(x + 65) != 'A') and (
                             chr(x + 65) != 'E') and (chr(x + 65) != 'R'):
                         return chr(x + 65)
 
     def edges_solved(self):
-        solvedcube = Cube()
+        solved_cube = Cube()
         for x in range(len(self.edges)):
-            if not self.edges[x].compare(solvedcube.edges[x]):
+            if not self.edges[x].compare(solved_cube.edges[x]):
                 return False
         return True
 
     def corners_solved(self):
-        solvedcube = Cube()
+        solved_cube = Cube()
         for x in range(len(self.corners)):
-            if not self.corners[x].compare(solvedcube.corners[x]):
+            if not self.corners[x].compare(solved_cube.corners[x]):
                 return False
         return True

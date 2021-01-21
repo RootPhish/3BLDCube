@@ -7,17 +7,17 @@ if __name__ == '__main__':
 
     letterSequence = ''
 
-    def move_piece(cubietype, letter):
-        if cubietype == 'e':
-            SetupMoves = EdgeSetupMoves
+
+    def move_piece(cubie_type, letter):
+        if cubie_type == 'e':
+            setup_moves = EdgeSetupMoves
             algo = "R U R' U' R' F R2 U' R' U' R U R' F'"
         else:
-            SetupMoves = CornerSetupMoves
+            setup_moves = CornerSetupMoves
             algo = "R U' R' U' R U R' F' R U R' U' R' F R"
-        cube.perform_algo(SetupMoves[letter])
+        cube.perform_algo(setup_moves[letter])
         cube.perform_algo(algo)
-        cube.perform_reverse(SetupMoves[letter])
-
+        cube.perform_reverse(setup_moves[letter])
 
 
     while not cube.edges_solved():
