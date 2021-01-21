@@ -1,22 +1,50 @@
-from cube import Cube
-
-SetupMoves = {
-    'H': "d L'",
-    'J': "d2 L",
-    'L': "L'",
-    'S': "l' D' L2",
-    'U': "D' l2"
-}
+from cube import Cube, EdgeSetupMoves, CornerSetupMoves
 
 if __name__ == '__main__':
     cube = Cube()
-    cube.perform_algo("D' U2 B F' U D B' L' D R2")
+    cube.perform_algo("F' L2 D2 U F' U B2 F2 L2 R'")
     cube.print(True)
 
-    buffer = cube.edges[1].faces['U']
-    while (buffer != 'B') and (buffer != 'M'):
-        cube.perform_algo(SetupMoves[buffer])
-        cube.perform_algo("R U R' U' R' F R2 U' R' U' R U R' F'")
-        cube.perform_reverse(SetupMoves[buffer])
-        cube.print(True)
+    letterSequence = ''
+
+    def move_piece(cubietype, letter):
+        if cubietype == 'e':
+            SetupMoves = EdgeSetupMoves
+            algo = "R U R' U' R' F R2 U' R' U' R U R' F'"
+        else:
+            SetupMoves = CornerSetupMoves
+            algo = "R U' R' U' R U R' F' R U R' U' R' F R"
+        cube.perform_algo(SetupMoves[letter])
+        cube.perform_algo(algo)
+        cube.perform_reverse(SetupMoves[letter])
+
+
+    while not cube.edges_solved():
         buffer = cube.edges[1].faces['U']
+        while (buffer != 'B') and (buffer != 'M'):
+            letterSequence += buffer
+            move_piece('e', buffer)
+            buffer = cube.edges[1].faces['U']
+
+        edge = cube.find_first_unsolved_edge()
+        if edge != '' and edge is not None:
+            letterSequence += edge
+            move_pieve('e', edge)
+
+    print(letterSequence)
+
+    letterSequence = ''
+    while not cube.corners_solved():
+        buffer = cube.corners[0].faces['L']
+        while (buffer != 'A') and (buffer != 'E') and (buffer != 'R'):
+            letterSequence += buffer
+            move_piece('c', buffer)
+            buffer = cube.corners[0].faces['L']
+
+        corner = cube.find_first_unsolved_corner()
+        if corner != '' and corner is not None:
+            letterSequence += corner
+            move_piece('c', corner)
+
+    print(letterSequence)
+    cube.print(True)

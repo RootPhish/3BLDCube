@@ -13,6 +13,61 @@ class Colors:
     RESET = '\033[0m'
 
 
+CornerSetupMoves = {
+    "A": "",
+    "B": "R2",
+    "C": "F2 D",
+    "D": "F2",
+    "E": "",
+    "F": "F' D",
+    "G": "F'",
+    "H": "D' R",
+    "I": "F R'",
+    "J": "R'",
+    "K": "F' R'",
+    "L": "F2 R'",
+    "M": "F",
+    "N": "R' F",
+    "O": "R2 F",
+    "P": "R F",
+    "Q": "R D'",
+    "R": "",
+    "S": "D F'",
+    "T": "R",
+    "U": "D",
+    "V": "",
+    "W": "D'",
+    "X": "D2"
+}
+
+EdgeSetupMoves = {
+    'A': "l2 D' l2",
+    'B': "",
+    'C': "l2 D l2",
+    'D': "",
+    'E': "L d' L",
+    'F': "d' L",
+    'G': "L' d' L",
+    'H': "d L'",
+    'I': "l D' L2",
+    'J': "d2 L",
+    'K': "l D L2",
+    'L': "L'",
+    'M': "",
+    'N': "d L",
+    'O': "D' l D L2",
+    'P': "d' L'",
+    'Q': "l' D L2",
+    'R': "L",
+    'S': "l' D' L2",
+    'T': "d2 L'",
+    'U': "D' l2",
+    'V': "D2 L2",
+    'W': "D L2",
+    'X': "L2"
+}
+
+
 class Cube:
 
     def __init__(self):
@@ -207,6 +262,8 @@ class Cube:
             func()
 
     def reverse_algo(self, algo):
+        if algo == '':
+            return ''
         moves = algo.split(' ')
         moves.reverse()
         newmoves = []
@@ -221,3 +278,35 @@ class Cube:
 
     def perform_reverse(self, algo):
         self.perform_algo(self.reverse_algo(algo))
+
+    def find_first_unsolved_edge(self):
+        solvedcube = Cube()
+        for x in range(0, 24):
+            for counter in range(len(self.edges)):
+                if chr(x + 65) in self.edges[counter].faces.values():
+                    if (not self.edges[counter].compare(solvedcube.edges[counter])) and (chr(x + 65) != 'B') and (
+                            chr(x + 65) != 'M'):
+                        return chr(x + 65)
+
+    def find_first_unsolved_corner(self):
+        solvedcube = Cube()
+        for x in range(0, 24):
+            for counter in range(len(self.corners)):
+                if chr(x + 65) in self.corners[counter].faces.values():
+                    if (not self.corners[counter].compare(solvedcube.corners[counter])) and (chr(x + 65) != 'A') and (
+                            chr(x + 65) != 'E') and (chr(x + 65) != 'R'):
+                        return chr(x + 65)
+
+    def edges_solved(self):
+        solvedcube = Cube()
+        for x in range(len(self.edges)):
+            if not self.edges[x].compare(solvedcube.edges[x]):
+                return False
+        return True
+
+    def corners_solved(self):
+        solvedcube = Cube()
+        for x in range(len(self.corners)):
+            if not self.corners[x].compare(solvedcube.corners[x]):
+                return False
+        return True

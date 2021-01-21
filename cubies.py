@@ -23,6 +23,16 @@ class Cubie:
             self.faces['D'] = self.faces['R']
             self.faces['R'] = temp
 
+    def compare(self, cubie):
+        if self.faces['U'] == cubie.faces['U'] and \
+           self.faces['D'] == cubie.faces['D'] and \
+           self.faces['F'] == cubie.faces['F'] and \
+           self.faces['B'] == cubie.faces['B'] and \
+           self.faces['L'] == cubie.faces['L'] and \
+           self.faces['R'] == cubie.faces['R']:
+            return True
+        else:
+            return False
 
 class Corner(Cubie):
     def __init__(self, side1, label1, side2, label2, side3, label3):
