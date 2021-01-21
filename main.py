@@ -19,6 +19,7 @@ if __name__ == '__main__':
         cube.perform_reverse(SetupMoves[letter])
 
 
+
     while not cube.edges_solved():
         buffer = cube.edges[1].faces['U']
         while (buffer != 'B') and (buffer != 'M'):
