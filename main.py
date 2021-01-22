@@ -2,7 +2,7 @@ from cube import Cube, EdgeSetupMoves, CornerSetupMoves
 
 if __name__ == '__main__':
     cube = Cube()
-    cube.perform_algo("F' L2 D2 U F' U B2 F2 L2 R'")
+    cube.perform_algo("B F2 L R2 D U F' U L2 B")
     cube.print(True)
 
     letterSequence = ''
@@ -29,8 +29,9 @@ if __name__ == '__main__':
 
         edge = cube.find_first_unsolved_edge()
         if edge != '' and edge is not None:
+            letterSequence += ' '
             letterSequence += edge
-            move_pieve('e', edge)
+            move_piece('e', edge)
 
     print(letterSequence)
 
@@ -44,6 +45,7 @@ if __name__ == '__main__':
 
         corner = cube.find_first_unsolved_corner()
         if corner != '' and corner is not None:
+            letterSequence += ' '
             letterSequence += corner
             move_piece('c', corner)
 
